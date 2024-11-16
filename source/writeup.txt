@@ -1,10 +1,6 @@
-* Bug: a fmtstr vulnerability
+In ROP ROP Revolution the user must be able to Make A ROP chain in order to incremet the step counter to 148.
+He must make a ROP chain that calls direction function in the ymca.c and call the direction of the step correctly.
+Users can find the correct steps to take by either watching the Youtube video in the reference or 
+look at the source code itself. After incrementing the steps by 148 the user then must call the win function
+which will print out the flag. 
 
-  char msg[100];
-  snprintf(msg, sizeof(msg), "Invalid Password! %s\n", buf);
-  printf(msg);
-
-* Exploit
-
-  1) overwrite 'secret' with any value
-  2) overwrite the GOT of puts() to print_key()

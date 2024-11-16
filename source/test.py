@@ -1,32 +1,34 @@
 #!/usr/bin/env python3
-
-import os
-import re
-import sys
-
 from pwn import *
 
-ROOT = os.path.abspath(os.path.dirname(__file__))
+def run_simple_test():
+    # Start the process using pwntools
+    process_name = "./target"  # Path to your compiled binary
+    proc = process(process_name)
 
-context.arch = "x86_64"
-context.bits = 32
 
-bin = os.path.join(ROOT, "../docker/target")
+    proc.recvuntil("Enter your Steps of the YMCA Song:".encode())
+    # Send a large payload of "A"s to trigger buffer overflow
+    payload = b"A" * 1000
+    proc.sendline(payload)
+    
+    # Wait for the process to terminate and check the exit code
+    proc.wait()
 
-if __name__ == '__main__':
-    if "REMOTE" in os.environ:
-        if not "PORT" in os.environ:
-            print("[!] Please specify the port number")
-            exit(1)
-        p = remote("localhost", int(os.environ["PORT"]))
+    # Check for segmentation fault (exit code -11)
+    if proc.poll() == -11:
+        print("Test passed: Segmentation fault (SIGSEGV) detected!")
     else:
-        b = os.path.abspath(bin)
-        p = process(b, cwd=os.path.dirname(b))
+        print(f"Test failed: Process exited with code {proc.poll()}")
 
-    p.sendline(b"250382")
-    if b"Password OK :)" in p.recvall():
-        print("OK!")
-        exit(0)
-    else:
-        print("FAILED!")
-        exit(1)
+    # Close the process
+    proc.close()
+
+
+    # Close the process
+    proc.close()
+
+if __name__ == "__main__":
+    run_simple_test()
+
+

@@ -14,10 +14,10 @@ CFLAGS += -Wno-format-security
 # CFLAGS += -z execstack
 
 # enable SSP
-CFLAGS += -fstack-protector
+#CFLAGS += -fstack-protector
 
 # disable SSP
-# CFLAGS += -fno-stack-protector
+ CFLAGS += -fno-stack-protector
 
 # enable ASLR
 # CFLAGS += -pie -fPIE
@@ -30,7 +30,7 @@ ALL := target
 .PHONY: all
 all: $(ALL)
 
-target: fmtstr.c
+target: ymca.c
 	$(CC) $(CFLAGS) -o $@ $< $(LDFLAGS) $(LIBS)
 	checksec --file $@
 
